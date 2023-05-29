@@ -1,17 +1,9 @@
 import {Button, Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import persona from '../assets/persona-img-1.png';
-import {useRoute} from '@react-navigation/native';
-import Footer from '../components/MainFooter'
-import {useNavigation} from '@react-navigation/native';
+import Footer from '../components/MainFooter';
 
-const Home = () => {
-  const route = useRoute();
-  const navigation = useNavigation();
-
-  const logoutFunc = () => {
-    navigation.navigate('Login')
-  }
+const Home = ({route, navigation}) => {
 
   return (
     <View style={styles.mainContainer}>
@@ -20,14 +12,18 @@ const Home = () => {
         <Image source={persona} style={styles.personaField}></Image>
       </View>
       <View style={styles.detailsContainer}>
-        <Text style={styles.mainText}>Name :</Text>
-        <Text style={styles.mainText}>Email :</Text>
+        <Text style={styles.mainText}>
+          Name :{route.params && route.params.name}{' '}
+        </Text>
+        <Text style={styles.mainText}>
+          Employee ID : {route.params && route.params.Id}
+        </Text>
         <View style={styles.logoutBtnContainer}>
-          <Button title="Logout" onPress={logoutFunc}></Button>
+          <Button title="Logout" onPress={() => navigation.goBack()}></Button>
         </View>
       </View>
       <View style={styles.footerContainer}>
-        <Footer/>
+        <Footer />
       </View>
     </View>
   );
@@ -57,13 +53,12 @@ const styles = StyleSheet.create({
   detailsContainer: {
     flex: 6,
     paddingTop: 20,
-
     paddingHorizontal: 40,
   },
   footerContainer: {
     flex: 2,
-    alignItems:'center',
-    paddingBottom:20
+    alignItems: 'center',
+    paddingBottom: 20,
   },
   personaField: {
     width: 100,
@@ -74,6 +69,6 @@ const styles = StyleSheet.create({
   },
   logoutBtnContainer: {
     justifyContent: 'center',
-    paddingTop:250
+    paddingTop: 250,
   },
 });

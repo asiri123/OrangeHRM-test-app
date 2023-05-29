@@ -3,21 +3,19 @@ import {Image, StyleSheet, Text, TextInput, View, Button} from 'react-native';
 import React, {useState} from 'react';
 import headerImage1 from '../assets/icon-orange.png';
 import instagramIcon from '../assets/icon-instagram.png';
-import {useNavigation} from '@react-navigation/native';
 import Footer from '../components/MainFooter';
 
-const Login = () => {
+const Login = ({navigation}) => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [userNameError, setUserNameError] = useState('');
-
-  const navigation = useNavigation();
+  const [credentials, setCredentials] = useState('');
 
   const LoginFetch = () => {
     if (!userName.trim() || !password.trim()) {
       setUserNameError('fill the fields');
-    } else {
-      setUserNameError('');
+    } else if (userName !== 'Admin' && password !== '8QCpj@@@k3YY') {
+      setCredentials('credentials are wrong');
     }
 
     var myHeaders = new Headers();
@@ -26,7 +24,7 @@ const Login = () => {
     myHeaders.append('Content-Type', 'application/json');
     myHeaders.append(
       'Authorization',
-      'Bearer 2ed0819a87bb4cdad62fbfa3c0c34f3ce8e48ae2',
+      'Bearer e918bbceba68944de04c0aee6efd853e72d27e16',
     );
 
     var raw = JSON.stringify({
@@ -46,16 +44,21 @@ const Login = () => {
       requestOptions,
     )
       .then(response => response.json())
-       .then(result => console.log(result,"test123"))
       .then(result => {
-        navigation.navigate('Home');
+        navigation.navigate({
+          name: 'Home',
+          params: {
+            name: result.user.employeeName.toString(),
+            Id: result.user.employeeId.toString(),
+          },
+        });
       })
+
       .catch(error => console.log('error', error));
   };
 
   return (
     <View style={styles.mainContainer}>
-      {/* <View style={styles.mainHeaderContent}></View> */}
       <View style={styles.mainMiddleContent}>
         <Image source={headerImage1} style={styles.mainBackground}></Image>
         <View style={styles.userNameField}>
@@ -65,7 +68,7 @@ const Login = () => {
             onChangeText={text => setUserName(text)}
             value={userName}
           />
-          <Text style={{color:'red'}}>{userNameError}</Text>
+          <Text style={{color: 'red'}}>{userNameError}</Text>
         </View>
         <View style={styles.passwordField}>
           <TextInput
@@ -74,7 +77,8 @@ const Login = () => {
             onChangeText={text => setPassword(text)}
             value={password}
           />
-           <Text style={{color:'red'}}>{userNameError}</Text>
+          <Text style={{color: 'red'}}>{userNameError}</Text>
+          <Text style={{color: 'red'}}>{credentials}</Text>
         </View>
         <View style={styles.loginContainer}>
           <Button
